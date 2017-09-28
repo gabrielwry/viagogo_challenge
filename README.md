@@ -10,7 +10,8 @@ Each ticket has a price ranging (0,500];<br  />
 The solve method asks user for x and y coordinates input and print out the 5 closest events with cheapest ticket and distance from user;<br  />
 Distances are calculated as Manhattan Distance;<br  />
 
-To optimize, the cheapest ticket is stored each time a ticket is added to the event.
+To optimize, the cheapest ticket is stored each time a ticket is added to the event.<br  />
+
 Python 3 Command Line Usage:
 ```
 python solution.py
