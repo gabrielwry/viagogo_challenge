@@ -8,7 +8,7 @@ DEFAULT_WIDTH = 10.0
 FLOAT_POINT = 1 # allowing one float point percision
 CAPACITY = 1  # allowing one event at each location
 EVENT_SIZE = 500  # allowing 500 events by default
-TICKET_SIZE = 100  # allowing 100 tickets per event by default
+TICKET_SIZE = 100  # allowing at most 100 tickets per event by default
 TICKET_PRICE_RANGE = 500.0  # default price range 0~500
 QUERY_NUMBER = 5 # default 5 closest events
 
@@ -83,7 +83,10 @@ class Event:
             self.set_cheapest(ticket) # update the cheapest ticket when adding a ticket
 
     def __str__(self):
-        str_ = 'Event id: '+str(self.id).zfill(3)+'- '+str(self.cheapest_ticket)
+        if self.cheapest_ticket is None:
+            str_ = 'Event id: ' + str(self.id).zfill(3) + '- ' + 'no available ticket for now'
+        else:
+            str_ = 'Event id: '+str(self.id).zfill(3)+'- '+str(self.cheapest_ticket)
         return str_
 
 
@@ -112,7 +115,7 @@ class World:
                     tickets = []
                     event = Event(i, location, tickets)
 
-                    for j in range(0, TICKET_SIZE + 1):
+                    for j in range(0, random.randint(0,TICKET_SIZE)): # each event has 0 or more ticket
                         price = TICKET_PRICE_RANGE * (1.0 - random.random()) # exclude 0
                         ticket = Ticket(j,price)
                         event.add_ticket(ticket)
