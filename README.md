@@ -38,8 +38,9 @@ Event id: 467- $5.31, Distance 0.6
 Do you want to query another location? (N/Y)   N
 Thanks for using.
 ```
-The world only supports one event at each location for now. <br   />
+-The world only supports one event at each location for now. <br   />
 The default setting of event capacity of each location is declared in the program. The program keeps a list of events at each location and already support multiple events.<br     />
-The world size right now is relatively small.<br   />
+
+-The world size right now is relatively small.<br   />
 If the world size gets larger, one way to optimize the calculation speed is to exapnding the radius recursively at the user location instead of searching the whole world.<br   />
 For example, the user location is (0.0,0.0), we first did a search at radius 1 and see if there are 5 matching events and grows the radius to 2 if there is not. This method may work well given the density of the events is large.
