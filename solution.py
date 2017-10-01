@@ -113,7 +113,7 @@ class World:
                     event = Event(i, location, tickets)
 
                     for j in range(0, TICKET_SIZE + 1):
-                        price = TICKET_PRICE_RANGE * random.random()
+                        price = TICKET_PRICE_RANGE * (1.0 - random.random()) # exclude 0
                         ticket = Ticket(j,price)
                         event.add_ticket(ticket)
 
@@ -157,7 +157,9 @@ def solve(world):
         if distance <= max_[1]:
             closest.remove(max_)
             closest.append((each,distance))
-    return closest
+    for (location,distance) in closest:
+        for event in location.events:
+            print str(event)+', Distance {:,.1f}'.format(distance)
 
 
 def main():
@@ -168,11 +170,14 @@ def main():
         sys.exit(0)
 
     world = World()
-    closest_five_events = solve(world)
-
-    for (location,distance) in closest_five_events:
-        for event in location.events:
-            print str(event)+', Distance {:,.1f}'.format(distance)
+    while True:
+        exit_ = '0'
+        solve(world)
+        while exit_ not in 'NnYy':
+            exit_=raw_input('Do you want to query another location? (N/Y)   ')
+        if exit_ in 'Nn':
+            print('Thanks for using.')
+            sys.exit(0)
 
 
 if __name__ == "__main__": main()
