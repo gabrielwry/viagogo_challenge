@@ -10,6 +10,7 @@ CAPACITY = 1  # allowing one event at each location
 EVENT_SIZE = 500  # allowing 500 events by default
 TICKET_SIZE = 100  # allowing 100 tickets per event by default
 TICKET_PRICE_RANGE = 500.0  # default price range 0~500
+QUERY_NUMBER = 5 # default 5 closest events
 
 
 def manhattan_distance(location_1, location_2):
@@ -32,13 +33,13 @@ class Location:
         """
         self.x = x
         self.y = y
-        self.events = []
+        self.events = [] # Initiate a location with a blank list of events
 
     def able_to_add_event(self):
         """
-        :return: boolean
+        :rtype: boolean
         """
-        return len(self.events) < CAPACITY
+        return len(self.events) < CAPACITY # check number of events at a location
 
     def add_event(self,event):
         """
@@ -59,8 +60,7 @@ class Event:
         """
         self.id = id_
         self.tickets = tickets
-        self.cheapest_ticket = None
-
+        self.cheapest_ticket = None # keep track of the cheapest ticket of this event
 
     def set_cheapest(self,ticket):
         """
@@ -68,20 +68,19 @@ class Event:
         """
         self.cheapest_ticket = ticket
 
-
     def get_cheapest(self):
         """
         :return: cheapest ticket
         """
         return self.cheapest_ticket
 
-    def add_ticket(self,ticket):
+    def add_ticket(self, ticket):
         """
         :param tickets: Ticket object
         """
         self.tickets.append(ticket)
         if self.get_cheapest() is None or ticket.price <= self.cheapest_ticket.price:
-            self.set_cheapest(ticket)
+            self.set_cheapest(ticket) # update the cheapest ticket when adding a ticket
 
     def __str__(self):
         str_ = 'Event id: '+str(self.id).zfill(3)+'- '+str(self.cheapest_ticket)
@@ -89,7 +88,7 @@ class Event:
 
 
 class Ticket:
-    def __init__(self,id_,price):
+    def __init__(self, id_, price):
         """
         :param price:float
         """
@@ -97,7 +96,7 @@ class Ticket:
         self.price = price
 
     def __str__(self):
-        return '${:,.2f}'.format(self.price)
+        return '${:,.2f}'.format(self.price) # format ticket string
 
 
 class World:
@@ -106,7 +105,7 @@ class World:
         for i in range(1,EVENT_SIZE+1):
             while True:
                 x = float('{:,.1f}'.format(random.uniform(-10.0,10.0)))
-                y = float('{:,.1f}'.format(random.uniform(-10.0, 10.0)))
+                y = float('{:,.1f}'.format(random.uniform(-10.0, 10.0))) # initiate world with default setting
                 location = Location(x,y)
 
                 if location.able_to_add_event():
@@ -120,8 +119,8 @@ class World:
 
                     location.add_event(event)
                     self.locations_with_events.append(location)
-                    break
-        print ('The world is built.')
+                    break # keep adding events to a location until capacity
+        print ('The world is built.') # notify user the world is built
 
 
 def solve(world):
@@ -142,19 +141,19 @@ def solve(world):
             print ('One of your coordinates is out of range, '
                    'please only enter coordinates that range from -{:,.1f} to {:,.1f} for x '
                    'and -{:,.1f} to {:,.1f} for y.').format(DEFAULT_WIDTH,DEFAULT_WIDTH,DEFAULT_HEIGHT,DEFAULT_HEIGHT)
-            sys.exit(0)
+            sys.exit(0) # out of range error
 
-    except IndexError:
+    except (ValueError,IndexError):
         print('Input not valid, please make sure you type in TWO coordinates separated by a COMMA.')
-        sys.exit(0)
+        sys.exit(0) # invalid input number error
 
     user_location = Location(x_coordinate,y_coordinate)
     print 'User location is '+str(user_location)
 
-    closest = [(None,float('inf'))]*5
+    closest = [(None,float('inf'))]*QUERY_NUMBER # initiate with default
     for each in world.locations_with_events:
         distance = manhattan_distance(each,user_location)
-        max_ = max(closest,key = lambda x: x[1])
+        max_ = max(closest,key = lambda x: x[1]) # sort by distance and get the furthest event
         if distance <= max_[1]:
             closest.remove(max_)
             closest.append((each,distance))
